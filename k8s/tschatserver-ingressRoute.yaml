@@ -1,0 +1,38 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tschatserveringressroutehttp
+  namespace: default
+
+spec:
+  entryPoints:
+    - web
+
+  routes:
+  - match: Host(`ubiquiti-chat.fplab.info`) && PathPrefix(`/api`)
+    kind: Rule
+    priority: 10
+    services:
+    - name: tschatserver
+      port: 8022
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tschatserveringressroutehttps
+  namespace: default
+
+spec:
+  entryPoints:
+    - websecure
+
+  routes:
+  - match: Host(`ubiquiti-chat.fplab.info`) && PathPrefix(`/api`)
+    kind: Rule
+    priority: 10
+    services:
+    - name: tschatserver
+      port: 8022
+        
+  tls:
+    certResolver: myresolver
